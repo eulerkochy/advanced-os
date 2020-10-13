@@ -136,7 +136,7 @@ This was a severe problem the creators faced, and the dynamic nature of page ref
 
 The replacement policy followed was a priority based indexing of pages, with pages having same priority replaced on a **LRU (Least Recently Used)** basis, and the priorities *P* decided by
 <p align="center">
-<img src="formula.jpg" alt="P = \sum c(r)">
+<img src="P-formula.jpg" alt="P = \sum c(r)">
 </p>
 where the summation is taken over the CPSs referenced by this page and **c(r)** is a cost function which had the value of 2 if r was in some top CPS, 1 if next-to-top and 0 if lower than that. No prefetching, demand paging, or frequency dependent policies were implemented. The need to define a CPS explicitly was also inconvenient, and could have been avoided if demand paging were implemented.
 
