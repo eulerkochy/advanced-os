@@ -163,7 +163,7 @@ Pilot could support multiple volumes or storage devices (physical volumes) and p
 
 ### Virtual Memory
 
-Pilot had a single linear address space of 2<sup>3</sup> 16-bit words, with runs of addresses divided into the `Space` interface. It was a tree kind of structure, the root `Space` having all memory and any new `Space` defined as a subspace of the current referenced Space.
+Pilot had a single linear address space of 2<sup>32</sup> 16-bit words, with runs of addresses divided into the `Space` interface. It was a tree kind of structure, the root `Space` having all memory and any new `Space` defined as a subspace of the current referenced Space.
 
 Each space had three flags: referenced, written and write-protected, and the operations supported by the `Space` interface were:
 
