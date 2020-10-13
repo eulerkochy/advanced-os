@@ -138,7 +138,7 @@ The replacement policy followed was a priority based indexing of pages, with pag
 <p align="center">
 <img src="P-formula.jpg" alt="P = \sum c(r)">
 </p>
-where the summation is taken over the CPSs referenced by this page and **c(r)** is a cost function which had the value of 2 if r was in some top CPS, 1 if next-to-top and 0 if lower than that. No prefetching, demand paging, or frequency dependent policies were implemented. The need to define a CPS explicitly was also inconvenient, and could have been avoided if demand paging were implemented.
+where the summation is taken over the CPSs referenced by this page and <span><b>c(r)</b></span> is a cost function which had the value of 2 if r was in some top CPS, 1 if next-to-top and 0 if lower than that. No prefetching, demand paging, or frequency dependent policies were implemented. The need to define a CPS explicitly was also inconvenient, and could have been avoided if demand paging were implemented.
 
 ### Policy Module guarantees
 
