@@ -2,7 +2,7 @@
 # A Look Back at some fundamental papers which shaped modern OS development
 
 
-### Authors: Koustav Chowdhury, Rupayan Sarkar, Jyoti Agrawal, Jyotisman Das, Bedant Agrawal
+### Authors: Koustav Chowdhury, Rupayan Sarkar, Jyoti Agrawal, Jyotisman Das, Bedant Agarwal
 
 <br>
 <b>As modern Operating Systems and Processors continue to amaze us with their ultra - high parallelism and super convenient user interfaces, and providing us virtually infinite cloud storage with the advent of virtualization technology and cloud computing, let us take a step back and look at what design features, or what user needs, did inspire the modern OS design. We shall be looking at 2 operating systems specifically, namely the Hydra OS and the Pilot OS, and shall be describing their architecture, their merits and shortcomings, and how they parallel modern OS which led to  today’s standard OS design, and is taught to students of computer science all over the world.</b>
