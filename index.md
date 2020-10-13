@@ -122,7 +122,7 @@ However, this risked the issue that a demonic process could starve other process
 
 ### Paging and Paging Policy in Hydra
 
-Paging is strongly architecture dependent, and PDP-11 could only generate 16-bit addresses, and it's a rather small address space. Hydra was incapable of supporting **demand paging**. Each page was of **8KB** size. The hierarchy of paging for a LNS was a RPS (relocation pageset or currently executing page set or hot pages), CPS (current page set or in-memory pageset or warm pages) and LNS (total pageset, including cold pages, which needed to fetched from storage). Kernel operations like `CPSLOAD(cpsslot, page)`and `RPSLOAD(rpsslot, cpsslot)` loaded pages from a hierarchy to its subset, thus referencing current pages.
+Paging is strongly architecture dependent, and PDP-11 could only generate 16-bit addresses, and it's a rather small address space. Hydra was incapable of supporting **demand paging**. Each page was of **8KB** size. The hierarchy of paging for a LNS was a RPS (relocation pageset or currently executing page set or hot pages), CPS (current page set or in-memory pageset or warm pages) and LNS (total pageset, including cold pages, which needed to be fetched from storage). Kernel operations like `CPSLOAD(cpsslot, page)`and `RPSLOAD(rpsslot, cpsslot)` loaded pages from a hierarchy to its subset, thus referencing current pages.
 
 The paging policy supported by Hydra was:
 
@@ -149,7 +149,7 @@ One could have questioned whether the PMs themselves were trustworthy or not wit
 
 # Pilot OS: An Operating System for a Personal Computer
 
-Developed at Xerox Business Systems by Redell et.al., during the late 1970s, it was an OS designed for personal computers, and supported a high resolution bitmap display, a keyboard, a pointing device, a moving arm disk storage and a high bandwidth network to a LAN or remote servers. Written in the **Mesa programming language**, it was a single language single user system, and amusingly, the Mesa language depended on Pilot OS for its runtime support. 
+Developed at Xerox Business Systems by *Redell et.al.*, during the late 1970s, it was an OS designed for personal computers, and supported a high resolution bitmap display, a keyboard, a pointing device, a moving arm disk storage and a high bandwidth network to a LAN or remote servers. Written in the **Mesa programming language**, it was a single language single user system, and amusingly, the Mesa language depended on Pilot OS for its runtime support. 
 
 Mesa consisted of **program modules** for defining and storing the internal data structures of a module, and **definitions module** for exporting interfaces needed to handle the module. It was similar to the Hydra design and modern day abstraction in object oriented programming. Interfaces exported were files, streams, network communication and virtual memory, and we shall consider each in turn.
 
@@ -163,7 +163,7 @@ Pilot could support multiple volumes or storage devices (physical volumes) and p
 
 ### Virtual Memory
 
-Pilot had a single linear address space of 2<sup>32</sup> 16-bit words, with runs of addresses divided into the `Space` interface. It was a tree kind of structure, the root `Space` having all memory and any new `Space` defined as a subspace of the current referenced Space.
+Pilot had a single linear address space of 2<sup>32</sup> 16-bit words, with runs of addresses divided into the `Space` interface. It was a tree kind of structure, the root `Space` having all memory and any new `Space` defined as a subspace of the current referenced `Space`.
 
 Each space had three flags: referenced, written and write-protected, and the operations supported by the `Space` interface were:
 
