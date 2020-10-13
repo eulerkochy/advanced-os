@@ -43,9 +43,9 @@ The protection problem is an interesting one, and the authors had divided it int
 
 The policy / mechanism separation dictated that Hydra didn’t have any policy granting or denying access rights to a resource, but rather had a mechanism built-in to do so as needed by another user or program. This design is similar to the **Exokernel** design, where library OSs on top of the exokernel could decide the policy of resource allocation, but the protection and granting of resources rights rested with the Exokernel only.
 
-Hydra referred to any process, procedure (function) or semaphore, etc., as an **object**(not in the sense of object oriented programming). Objects were distinguished by **types**, and achieved abstraction as described above. Generic kernel operations could manipulate objects, and objects as a whole could only be manipulated by a program via a **capability list** or `C-LIST`. Each `C-LIST` contains a large number of access rights which determine how the object named by the `C-LIST` can be accessed.
+Hydra referred to any process, procedure (function) or semaphore, etc., as an **object**(not in the sense of object oriented programming). Objects were distinguished by **types**, and achieved abstraction as described above. Generic kernel operations could manipulate objects, and objects as a whole could only be manipulated by a program via a **capability list** or `C-LIST`. Each C-LIST contains a large number of access rights which determine how the object named by the C-LIST can be accessed.
 
-In Hydra, a **procedure** or **function call** had its own `C-LIST` and executed in a different environment than the caller of the procedure. Since the procedure, if from a proper subsystem, should be able to manipulate the object at the data structure and contents level, the procedure had a provision of **rights amplification**, which enabled it to have more rights than its caller, however the caller couldn’t access the contents of the object via its own C-LIST.
+In Hydra, a **procedure** or **function call** had its own C-LIST and executed in a different environment than the caller of the procedure. Since the procedure, if from a proper subsystem, should be able to manipulate the object at the data structure and contents level, the procedure had a provision of **rights amplification**, which enabled it to have more rights than its caller, however the caller couldn’t access the contents of the object via its own C-LIST.
 
 Every program had a C-LIST which was a linked list of pairs of an object and a set of access rights for the object in each node. Each **executing program** was also deemed to be an object, and was known as a **Local Namespace (LNS)**. Each object had a *Data-part* and a `C-LIST`
 The Kernel Multiprocessing System (KMPS) was that portion of the kernel which implemented the mechanism to support policies for scheduling user processes. Each process had an associated Policy Module (PM), which was responsible for making scheduling decisions related to that process, e.g., one PM may control scheduling of time-sharing processes, and another may control scheduling background batch processes.
@@ -55,7 +55,7 @@ The Kernel Multiprocessing System (KMPS) was that portion of the kernel which im
 Syscalls manipulating the data part:
 1. `Getdata(c-list, data_offset, length_to_read, buffer)`
 2. `Putdata`
-3.` Adddata`
+3. `Adddata`
 
 Syscalls manipulating the C-LIST of the object:
 1. `Load(c-list_path, LNS_slot)`
@@ -108,7 +108,7 @@ Similar to the **Exokernel** design, in Hydra objects participated in a revocati
 1. **Mutual suspicion**: By allowing each procedure to have its own C-LIST and execute in a different environment than its callee, thereby not letting inheritance of rights unless explicitly passed in the procedure template
 2. **Inadvertent modification of objects**: By requiring that any rights that can modify an object should have an additional right MDFYRTS.
 3. **Secure environment of execution**: The right ENVRTS bound a LNS or procedure to its own environment only, and ENVRTS could not be inherited or gained by rights amplification. This is similar to the concept of containers in modern cloud computing.
-Freezing of C-LISTs and objects: Passing FRZRTS to a C-LIST made the object and C-LIST incapable of being modified, and hence was a safeguard against other users.
+4. **Freezing of C-LISTs and objects**: Passing FRZRTS to a C-LIST made the object and C-LIST incapable of being modified, and hence was a safeguard against other users.
 
 We thus gain an insight into the very powerful and elaborate protection mechanism and the process structure and execution in Hydra. With this knowledge, we can explore the different OS specific structures in Hydra, namely paging and scheduling.
 
