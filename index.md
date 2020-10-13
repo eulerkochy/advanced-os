@@ -184,9 +184,9 @@ Pilot had the facility of saving the entire machine state and doing a **world-sw
 ## Architecture and Components
 
 The creators kept the kernel a simple one, consisting of the **filer** and **swapper**, together with low-level Mesa support and basic network drivers. The filer handled file mappings, and the swapper handled disk accesses, and on top of these, the **virtual memory manager** and the **file manager** allowed for additional resource and feature management. A page or space cache was also present, containing swap units, and it supported demand paging and a viable page replacement policy. 
-<p><span style="display:block;text-align:center">
-![pilot-arch-image](pilot-arch.png?raw=true "Pilot Architecture")
-</span></p>
+<p align="center">
+<img src="pilot-arch.png" alt="Pilot Architecture">
+</p>
 The process implementation in Pilot had provisions of `FORK`, `WAIT` and `MONITORS`, similar to UNIX. A file scavenger was also designed to repair damaged filesystems. Regarding the mapping between a volume and a file, a B-Tree keyed on `<file_uid, page_number>` was used, and it returned the device address of the page given a key, i.e., the physical address of the page given the virtual page number and file uid. 
 
 **Hence, we see that Pilot paralleled UNIX in many ways, and was thus influential in modern OS development. The protection policy in Pilot was a defensive one though, the kernel handling only errors and for the major part trusting applications. This may be a shortcoming, albeit if it were coupled with the strong protection policy in Hydra, it would have made a system similar in robustness and applicability as UNIX is.**
