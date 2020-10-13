@@ -139,7 +139,7 @@ The replacement policy followed was a priority based indexing of pages, with pag
 
 One could have questioned whether the PMs themselves were trustworthy or not with regard to scheduling. This was handled by a system administrator, who could define the reliability and trustworthiness of each PM. Each PM had identification data which caused a LNS to identify and be associated with it. Hydra also implemented an error mechanism, where the kernel could throw an error when a PM did an erroneous scheduling, or stopping of a process. No process could be restarted without modifying or updating the process or PM data, or else the kernel operations returned an error. The kernel provided a `RUNTIME(time, pages)` operation, which guaranteed that a process had at least time `time` and pages `pages` allocated to it. If these were erroneous, an error was thrown.
 
-**Thus we come to the end of a satisfactory discussion on the Hydra OS, having described almost all of its architectural features. We find that Hydra had many features of modern OSs, especially Linux. However, the C-LIST and rights mechanism aren’t used today, and today’s hardware support is much more powerful. Nevertheless, Hydra was a milestone in implementing so many features with so little hardware support, and it’s elaborate protection mechanism and multiprocessing support amazes us. With that, we shall be comparing and contrasting **Pilot OS now.**
+**Thus we come to the end of a satisfactory discussion on the Hydra OS, having described almost all of its architectural features. We find that Hydra had many features of modern OSs, especially Linux. However, the C-LIST and rights mechanism aren’t used today, and today’s hardware support is much more powerful. Nevertheless, Hydra was a milestone in implementing so many features with so little hardware support, and it’s elaborate protection mechanism and multiprocessing support amazes us. With that, we shall be comparing and contrasting Pilot OS now.**
 
 # Pilot OS: An Operating System for a Personal Computer
 
@@ -184,6 +184,8 @@ Pilot had the facility of saving the entire machine state and doing a **world-sw
 ## Architecture and Components
 
 The creators kept the kernel a simple one, consisting of the **filer** and **swapper**, together with low-level Mesa support and basic network drivers. The filer handled file mappings, and the swapper handled disk accesses, and on top of these, the **virtual memory manager** and the **file manager** allowed for additional resource and feature management. A page or space cache was also present, containing swap units, and it supported demand paging and a viable page replacement policy. 
+
+![pilot-arch-image](pilot-arch.png?raw=true "Pilot Architecture")
 
 The process implementation in Pilot had provisions of `FORK`, `WAIT` and `MONITORS`, similar to UNIX. A file scavenger was also designed to repair damaged filesystems. Regarding the mapping between a volume and a file, a B-Tree keyed on `<file_uid, page_number>` was used, and it returned the device address of the page given a key, i.e., the physical address of the page given the virtual page number and file uid. 
 
