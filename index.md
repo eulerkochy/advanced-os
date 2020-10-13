@@ -4,7 +4,7 @@
 
 ### Authors: Koustav Chowdhury, Rupayan Sarkar, Jyoti Agrawal, Jyotisman Das, Bedant Agrawal
 
-As modern Operating Systems and Processors continue to amaze us with their ultra - high parallelism and super convenient user interfaces, and providing us virtually infinite cloud storage with the advent of virtualization technology and cloud computing, let us take a step back and look at what design features, or what user needs, did inspire the modern OS design. We shall be looking at 3 operating systems specifically, namely the **Hydra OS**, the **Pilot OS** and the **CAL OS**, and shall be describing their architecture, their merits and shortcomings, and how they parallel modern OS which led to  today’s standard OS design, and is taught to students of computer science all over the world.
+## As modern Operating Systems and Processors continue to amaze us with their ultra - high parallelism and super convenient user interfaces, and providing us virtually infinite cloud storage with the advent of virtualization technology and cloud computing, let us take a step back and look at what design features, or what user needs, did inspire the modern OS design. We shall be looking at 2 operating systems specifically, namely the **Hydra OS** and the **Pilot OS**, and shall be describing their architecture, their merits and shortcomings, and how they parallel modern OS which led to  today’s standard OS design, and is taught to students of computer science all over the world.
 
 
 # Hydra OS: An OS for a multiprocessor system 
@@ -133,10 +133,59 @@ It was expensive for the KMPS to handle each page fault, and hence the PM had pa
 
 This was a severe problem the creators faced, and the dynamic nature of page referencing and faulting could not allow for two centres of authority for paging decisions, and ultimately the design was to be altered so that the KMPS was the sole arbiter and manager of pages. Each page also had the necessary provision of setting off a **dirty bit**, which indicated whether the page had been modified in memory since it was last written onto disk, and hence, should be updated in disk before being paged out.
 
-The replacement policy followed was a priority based indexing of pages, with pages having same priority replaced on a **LRU (Least Recently Used)** basis, and the priorities *P* decided by $P = \sum c(r)$ where the summation is taken over the CPSs referenced by this page and c(r)is a cost function which had the value of 2 if r was in some top CPS,1if next-to-top and 0 if lower than that. No prefetching, demand paging, or frequency dependent policies were implemented. The need to define a CPS explicitly was also inconvenient, and could have been avoided if demand paging were implemented.
+The replacement policy followed was a priority based indexing of pages, with pages having same priority replaced on a **LRU (Least Recently Used)** basis, and the priorities *P* decided by $P = \sum c(r)$ where the summation is taken over the CPSs referenced by this page and **c(r)** is a cost function which had the value of 2 if r was in some top CPS, 1 if next-to-top and 0 if lower than that. No prefetching, demand paging, or frequency dependent policies were implemented. The need to define a CPS explicitly was also inconvenient, and could have been avoided if demand paging were implemented.
 
 ### Policy Module guarantees
 
 One could have questioned whether the PMs themselves were trustworthy or not with regard to scheduling. This was handled by a system administrator, who could define the reliability and trustworthiness of each PM. Each PM had identification data which caused a LNS to identify and be associated with it. Hydra also implemented an error mechanism, where the kernel could throw an error when a PM did an erroneous scheduling, or stopping of a process. No process could be restarted without modifying or updating the process or PM data, or else the kernel operations returned an error. The kernel provided a `RUNTIME(time, pages)` operation, which guaranteed that a process had at least time `time` and pages `pages` allocated to it. If these were erroneous, an error was thrown.
 
+## Thus we come to the end of a satisfactory discussion on the Hydra OS, having described almost all of its architectural features. We find that Hydra had many features of modern OSs, especially Linux. However, the C-LIST and rights mechanism aren’t used today, and today’s hardware support is much more powerful. Nevertheless, Hydra was a milestone in implementing so many features with so little hardware support, and it’s elaborate protection mechanism and multiprocessing support amazes us. With that, we shall be comparing and contrasting **Pilot OS** now.
+
+# Pilot OS: An Operating System for a Personal Computer
+
+Developed at Xerox Business Systems by Redell et.al., during the late 1970s, it was an OS designed for personal computers, and supported a high resolution bitmap display, a keyboard, a pointing device, a moving arm disk storage and a high bandwidth network to a LAN or remote servers. Written in the **Mesa programming language**, it was a single language single user system, and amusingly, the Mesa language depended on Pilot OS for its runtime support. 
+
+Mesa consisted of **program modules** for defining and storing the internal data structures of a module, and **definitions module** for exporting interfaces needed to handle the module. It was similar to the Hydra design and modern day abstraction in object oriented programming. Interfaces exported were files, streams, network communication and virtual memory, and we shall consider each in turn.
+
+### Files
+
+Pilot defined a **File interface** for data storage, and a **Volume interface** for the actual storage device. Files had no directory hierarchy and were a flat namespace. A maximum of 2<sup>64</sup> files could be stored. The `File.Create` operation created a file and files were identified by unique **64-bit universal** identifiers or uids. These uids were unique for every system across all times, and hence, uniquely identified files even on different systems. Each uid was a concatenation of the machine serial number and the real time system clock. 
+
+Each file had 4 attributes or metadata: **size, type, permanence** and **immutability**. Having a permanence attribute supported an innovative failure recovery system: if between `File.Create` and `File.MakePermanent` calls the system crashes, a scavenger or garbage collector removed invalid and temporary files. Thus, before valuable data was to be stored in the file, it was to be made permanent. The immutability attribute simply said whether a file could be further modified or not, and aided in portability and security.
  
+Pilot could support multiple volumes or storage devices (physical volumes) and present them as a single large logical volume, or a large physical volume could also be divided into smaller logical volumes.
+
+### Virtual Memory
+
+Pilot had a single linear address space of 2<sup>3</sup> 16-bit words, with runs of addresses divided into the `Space` interface. It was a tree kind of structure, the root `Space` having all memory and any new `Space` defined as a subspace of the current referenced Space.
+
+Each space had three flags: referenced, written and write-protected, and the operations supported by the `Space` interface were:
+
+1. `Space.Create` - create a new space as a subspace of some other space
+2. `Space.Map` - associate a file or set of files to a space
+3. `Space.Activate` - swap in this space as it is to be referenced soon
+4. `Space.Deactivate` - swap out this space, and/or update in disk if it is dirty
+5. `Space.Kill` - overwrite this space as it is useless and no swapping is needed
+
+Whenever a program referenced a space, it would look for at least a file which was mapped into the space. If no file was mapped into the referenced space, the fatal error `AddressFault` was raised, and a debugger was to be invoked. The separation of mapping and disk swapping decoupled buffer operations (file read/write) from disk accesses, and enabled reduction in disk traffic. `Space.Kill` also helped in overwriting useless spaces which need not be swapped and written onto disk.
+
+### Streams and I/O devices
+
+Similar to modern Linux, devices had a device driver interface which had generic function calls which could be invoked by a client program. Pilot also defined a `Stream` interface which allowed a communication and data stream from a program to a device, similar to the **UNIX pipe**, and multiple pipes could be chained together. A special module called a **transducer** imported a device driver and exported a stream, while a filter module imported a stream and exported another. Hence, a transducer and a set of filters could be cascaded to form a pipeline, and the authors do reference the UNIX pipe here.
+
+### Network Communication
+
+During the time Pilot was constructed, it was clear that the basic networking system was the same as today’s computer networks, and routers and telnet had been developed. Pilot supported **socket communication** on both same and different machines, similar to UNIX’s design. Network addresses were represented as a triple of a 16-bit network number, a 32-bit processor ID and a 16-bit socket number, and exported as a system wide datatype `System.NetworkAddress`. The **ARPA inter-network protocol** family was used, and it had 3 levels similar to today’s OSI layers, with each level encapsulating and padding layer specific data and checksums to a packet. Both reliable communication via **TCP** and unreliable communication via **datagrams** were supported, and TCP implemented a connection-oriented and error correcting sequenced protocol as it does today. The other details were the same as conventional socket programming, i.e., socket listening and binding, and an early form of **DNS** was also in force at that time; it was called a **clearinghouse**, which was a network backed database mapping network addresses to hostnames. 
+
+### The CoPilot Debugger
+
+Pilot had the facility of saving the entire machine state and doing a **world-swap** to the CoPilot debugger, which had a separate boot file and enabled strong isolation between machine execution and debugging. The machine state could be restored by doing a second world-swap.
+
+## Architecture and Components
+
+The creators kept the kernel a simple one, consisting of the **filer** and **swapper**, together with low-level Mesa support and basic network drivers. The filer handled file mappings, and the swapper handled disk accesses, and on top of these, the **virtual memory manager** and the **file manager** allowed for additional resource and feature management. A page or space cache was also present, containing swap units, and it supported demand paging and a viable page replacement policy. 
+
+The process implementation in Pilot had provisions of `FORK`, `WAIT` and `MONITORS`, similar to UNIX. A file scavenger was also designed to repair damaged filesystems. Regarding the mapping between a volume and a file, a B-Tree keyed on `<file_uid, page_number>` was used, and it returned the device address of the page given a key, i.e., the physical address of the page given the virtual page number and file uid. 
+
+## Hence, we see that Pilot paralleled UNIX in many ways, and was thus influential in modern OS development. The protection policy in Pilot was a defensive one though, the kernel handling only errors and for the major part trusting applications. This may be a shortcoming, albeit if it were coupled with the strong protection policy in Hydra, it would have made a system similar in robustness and applicability as UNIX is.
+
