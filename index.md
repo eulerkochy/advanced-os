@@ -8,7 +8,7 @@
 <b>As modern Operating Systems and Processors continue to amaze us with their ultra - high parallelism and super convenient user interfaces, and providing us virtually infinite cloud storage with the advent of virtualization technology and cloud computing, let us take a step back and look at what design features, or what user needs, did inspire the modern OS design. We shall be looking at 2 operating systems specifically, namely the Hydra OS and the Pilot OS, and shall be describing their architecture, their merits and shortcomings, and how they parallel modern OS which led to  today’s standard OS design, and is taught to students of computer science all over the world.</b>
 <br>
 
-# Hydra OS: An OS for a multiprocessor system 
+# Hydra OS: An Operating System for a multiprocessor system 
 
 The Hydra OS was developed at Carnegie Mellon University (CMU) during the 1970s, and it was one of the only Operating systems at that time to have multiprocessing support, and have a process scheduling and memory model similar to today’s Linux. Together with its hardware architecture, the **PDP-11**, it supported multiprocessing, page tables and virtual memory, subsystems dedicated towards special functions, and had a very strong protection policy mediated by the kernel, via an elaborate capability list mechanism. It was able to achieve the policy - mechanism isolation which is one of the core principles of Linux and its kernel modules.
 
